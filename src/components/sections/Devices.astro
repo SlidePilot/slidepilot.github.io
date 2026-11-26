@@ -1,5 +1,4 @@
 ---
-import Icon from '../Icon.astro';
 import type { Dict } from '../../i18n/en';
 interface Props { d: Dict }
 const { d } = Astro.props;
@@ -15,7 +14,6 @@ const devices = [
     <div class="section-head center reveal">
       <span class="eyebrow">{v.eyebrow}</span>
       <h2 class="section-title">{v.title}</h2>
-      <p class="section-lead">{v.lead}</p>
     </div>
     <div class="cards">
       {devices.map((dev, i) => (
@@ -36,9 +34,6 @@ const devices = [
         </article>
       ))}
     </div>
-    <ul class="extras reveal">
-      {v.extras.map((e) => <li><Icon name="check" size={15} />{e}</li>)}
-    </ul>
   </div>
 </section>
 
@@ -56,8 +51,5 @@ const devices = [
   .btn-c { fill: var(--blue); }
   .device h3 { font-size: 20px; font-weight: 640; }
   .device p { color: var(--text-2); font-size: 15px; margin-top: 6px; }
-  .extras { list-style: none; padding: 0; margin: 32px auto 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; max-width: 860px; }
-  .extras li { display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px; border-radius: 999px; font-size: 14px; color: var(--text-2); background: var(--surface); border: 1px solid var(--border); }
-  .extras :global(svg) { color: var(--blue); }
   @media (max-width: 860px) { .cards { grid-template-columns: 1fr; } }
 </style>

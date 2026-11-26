@@ -210,3 +210,7 @@ p { margin: 0; }
   }
   .reveal { opacity: 1; transform: none; }
 }
+
+/* Secondary illustrations stay still until hovered (or centred on touch screens),
+   so only the main illustration of a section moves on its own. */
+.calm:not(.is-live):not(:hover) * { animation-play-state: paused !important; }

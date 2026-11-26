@@ -8,7 +8,7 @@ import type { Dict } from '../../i18n/en';
 interface Props { d: Dict; locale: Locale }
 const { d, locale } = Astro.props;
 const r = d.remote;
-const icons = ['lock', 'wifi', 'eye'] as const;
+const icons = ['lock', 'wifi', 'eye'] as const; // one icon per point
 ---
 <section class="section remote" id="remote">
   <div class="bg-glow" aria-hidden="true"></div>
@@ -22,7 +22,7 @@ const icons = ['lock', 'wifi', 'eye'] as const;
       <ul class="points">
         {r.points.map((p, i) => (
           <li class="reveal" style={`--delay:${i * 0.07}s`}>
-            <span class="pi"><Icon name={i === 0 ? 'lock' : icons[i]} size={18} /></span>
+            <span class="pi"><Icon name={icons[i]} size={18} /></span>
             <div><h3>{p.title}</h3><p>{p.text}</p></div>
           </li>
         ))}
@@ -40,7 +40,6 @@ const icons = ['lock', 'wifi', 'eye'] as const;
           <div class="code" aria-hidden="true"><span>482</span><span>913</span></div>
         </div>
       </div>
-      <div class="signal" aria-hidden="true"><span></span><span></span><span></span></div>
     </div>
   </div>
 </section>
@@ -68,22 +67,14 @@ const icons = ['lock', 'wifi', 'eye'] as const;
     padding: 14px 18px; border-radius: 18px;
     background: rgba(20, 23, 30, .82); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
     box-shadow: 0 20px 50px -10px rgba(0,0,0,.7);
-    animation: bob 6s ease-in-out infinite;
   }
   .pair-icon { width: 40px; height: 40px; border-radius: 11px; background: linear-gradient(#3da8ff, #0057f0 70%); display: grid; place-items: center; }
   .pair-icon :global(svg) { width: 72%; }
   .pair small { font-size: 11.5px; color: var(--text-3); }
   .code { display: flex; gap: 10px; font: 600 24px/1.1 var(--mono); letter-spacing: .08em; }
-  .signal { position: absolute; right: 6%; top: 12%; width: 70px; height: 70px; }
-  .signal span { position: absolute; inset: 0; border-radius: 50%; border: 1.5px solid rgba(61,168,255,.6); animation: ping 3s ease-out infinite; }
-  .signal span:nth-child(2) { animation-delay: 1s; }
-  .signal span:nth-child(3) { animation-delay: 2s; }
-  @keyframes ping { from { transform: scale(.2); opacity: 1; } to { transform: scale(1.6); opacity: 0; } }
-  @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 
   @media (max-width: 900px) {
     .layout { grid-template-columns: 1fr; gap: 32px; }
     .pair { left: 50%; transform: translateX(-100%); }
-    .pair { animation: none; }
   }
 </style>

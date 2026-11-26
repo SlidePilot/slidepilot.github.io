@@ -18,7 +18,7 @@ const thumbs = Array.from({ length: 8 }, (_, i) => i);
 
     <div class="bento">
       <!-- Layout -->
-      <article class="card tile span-2 reveal">
+      <article class="card tile primary span-2 reveal">
         <div class="illo illo-layout" aria-hidden="true">
           <div class="win">
             <div class="pane p-current"><span>{d.illo.current}</span><div class="slide"><i></i><b></b><b class="short"></b></div></div>
@@ -30,7 +30,7 @@ const thumbs = Array.from({ length: 8 }, (_, i) => i);
       </article>
 
       <!-- Timer -->
-      <article class="card tile reveal" style="--delay:.08s">
+      <article class="card tile calm reveal" style="--delay:.08s">
         <div class="illo illo-timer" aria-hidden="true" data-timer>
           <svg viewBox="0 0 120 120" class="ring">
             <circle cx="60" cy="60" r="52" class="track" />
@@ -42,7 +42,7 @@ const thumbs = Array.from({ length: 8 }, (_, i) => i);
       </article>
 
       <!-- Pointer -->
-      <article class="card tile reveal">
+      <article class="card tile calm reveal">
         <div class="illo illo-pointer" aria-hidden="true">
           <div class="slide-big">
             <i class="title"></i>
@@ -54,7 +54,7 @@ const thumbs = Array.from({ length: 8 }, (_, i) => i);
       </article>
 
       <!-- Drawing -->
-      <article class="card tile span-2 tile-shot reveal" style="--delay:.08s">
+      <article class="card tile primary span-2 tile-shot reveal" style="--delay:.08s">
         <div class="shot">
           <Image src={screen('drawing', locale)} alt={f.drawing.alt} widths={[600, 1000, 1400]} sizes="(max-width: 900px) 92vw, 720px" />
           <svg class="scribble" viewBox="0 0 400 200" aria-hidden="true"><path d="M40 150 C 90 60, 160 40, 220 90 S 330 170, 370 60" /></svg>
@@ -63,7 +63,7 @@ const thumbs = Array.from({ length: 8 }, (_, i) => i);
       </article>
 
       <!-- Notes -->
-      <article class="card tile reveal">
+      <article class="card tile calm reveal">
         <div class="illo illo-notes" aria-hidden="true">
           <div class="doc">
             <div class="toolbar"><b>B</b><i>I</i><u>U</u><span>•</span></div>
@@ -75,7 +75,7 @@ const thumbs = Array.from({ length: 8 }, (_, i) => i);
       </article>
 
       <!-- Curtain -->
-      <article class="card tile reveal" style="--delay:.06s">
+      <article class="card tile calm reveal" style="--delay:.06s">
         <div class="illo illo-curtain" aria-hidden="true">
           <div class="slide-big"><i class="title"></i><b></b><b></b><b class="short"></b><div class="curtain"></div></div>
         </div>
@@ -83,7 +83,7 @@ const thumbs = Array.from({ length: 8 }, (_, i) => i);
       </article>
 
       <!-- Navigator -->
-      <article class="card tile reveal" style="--delay:.12s">
+      <article class="card tile calm reveal" style="--delay:.12s">
         <div class="illo illo-nav" aria-hidden="true">
           <div class="thumbs">
             {thumbs.map((i) => <div class="thumb" style={`--i:${i}`}><i></i><b></b><span>{i + 1}</span></div>)}
@@ -108,7 +108,9 @@ const thumbs = Array.from({ length: 8 }, (_, i) => i);
       el.style.setProperty('--p', String(left / total));
       el.dataset.state = left <= 30 ? 'red' : left <= 120 ? 'yellow' : 'ok';
     };
-    const tick = () => { left = left <= 0 ? total : left - 1; render(); };
+    const tile = el.closest('.calm');
+    const live = () => !tile || tile.matches(':hover') || tile.classList.contains('is-live');
+    const tick = () => { if (!live()) return; left = left <= 0 ? total : left - 1; render(); };
     render();
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) { left = 95; render(); return; }
     new IntersectionObserver(([e]) => {
@@ -120,12 +122,19 @@ const thumbs = Array.from({ length: 8 }, (_, i) => i);
 
 <style>
   .bento { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  .tile { display: flex; flex-direction: column; min-height: 360px; }
+  .tile { display: flex; flex-direction: column; min-height: 380px; }
   .span-2 { grid-column: span 2; }
-  .copy { padding: 0 28px 26px; margin-top: auto; }
-  .copy h3 { font-size: 19px; font-weight: 620; letter-spacing: -.02em; }
-  .copy p { margin-top: 6px; color: var(--text-2); font-size: 15px; max-width: 460px; }
-  .illo { flex: 1; display: grid; place-items: center; padding: 28px; min-height: 230px; position: relative; }
+  .tile.calm { min-height: 300px; }
+  .copy { padding: 0 26px 24px; margin-top: auto; }
+  .copy h3 { font-size: 17px; font-weight: 620; letter-spacing: -.015em; }
+  .copy p { margin-top: 4px; color: var(--text-3); font-size: 14.5px; max-width: 460px; }
+  .primary .copy { padding: 0 32px 30px; }
+  .primary .copy h3 { font-size: 22px; letter-spacing: -.022em; }
+  .primary .copy p { color: var(--text-2); font-size: 15.5px; margin-top: 6px; }
+  .illo { flex: 1; display: grid; place-items: center; padding: 24px; min-height: 200px; position: relative; }
+  .calm .illo { opacity: .82; transition: opacity .4s var(--ease); }
+  .calm:hover .illo, .calm.is-live .illo { opacity: 1; }
+  .primary { background: linear-gradient(180deg, rgba(61,140,255,.07), rgba(255,255,255,.015) 60%); }
 
   @media (max-width: 900px) {
     .bento { grid-template-columns: 1fr 1fr; }

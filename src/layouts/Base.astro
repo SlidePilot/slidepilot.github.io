@@ -17,7 +17,9 @@ interface Props {
   detectLanguage?: boolean;
 }
 
-const { locale, page = '', title, description, detectLanguage = false } = Astro.props;
+const { locale, page = '', title, description } = Astro.props;
+// English pages send first-time visitors to their browser language (not the 404 page, which would loop).
+const detectLanguage = Astro.props.detectLanguage ?? (locale === 'en' && page !== '404');
 const d = t(locale);
 const pageTitle = title ?? d.meta.title;
 const pageDescription = description ?? d.meta.description;
@@ -57,7 +59,7 @@ const year = new Date().getFullYear();
             for (var i = 0; i < langs.length; i++) {
               var l = (langs[i] || '').slice(0, 2).toLowerCase();
               if (l === 'en') return;
-              if (l === 'de' || l === 'fr') { location.replace('/' + l + '/' + location.hash); return; }
+              if (l === 'de' || l === 'fr') { location.replace('/' + l + location.pathname.replace(/\/?$/, '/') + location.hash); return; }
             }
           } catch (e) {}
         })();
@@ -188,6 +190,14 @@ const year = new Date().getFullYear();
         entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('is-visible'); io.unobserve(en.target); } });
       }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
       document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+      // Touch screens: bring the calm illustration in the middle of the screen to life
+      if (matchMedia('(hover: none)').matches) {
+        const calm = new IntersectionObserver((entries) => {
+          entries.forEach((en) => en.target.classList.toggle('is-live', en.isIntersecting));
+        }, { rootMargin: '-35% 0px -35% 0px' });
+        document.querySelectorAll('.calm').forEach((el) => calm.observe(el));
+      }
 
       // Share / copy link buttons
       document.querySelectorAll<HTMLButtonElement>('[data-share]').forEach((btn) => {

@@ -15,7 +15,7 @@ export const getStaticPaths = localePaths;
 const { locale } = Astro.props as { locale: Locale };
 const d = t(locale);
 ---
-<Base locale={locale} detectLanguage={locale === 'en'}>
+<Base locale={locale}>
   <Hero d={d} locale={locale} />
   <Features d={d} locale={locale} />
   <Latex d={d} />

@@ -13,11 +13,7 @@ const { d, locale } = Astro.props;
 <section class="hero" id="download">
   <HeroGraphic />
   <div class="container hero-copy">
-    <a class="badge reveal" href="#features">
-      <span class="dot"></span>{d.hero.badge}<Icon name="arrow" size={14} />
-    </a>
     <h1 class="reveal" style="--delay:.05s" set:html={d.hero.title} />
-    <p class="lead reveal" style="--delay:.1s">{d.hero.subtitle}</p>
     <div class="actions reveal" style="--delay:.15s">
       <AppStoreButton d={d} />
       <a class="btn btn-secondary btn-lg donate" href={path(locale, 'donate')}>
@@ -27,7 +23,6 @@ const { d, locale } = Astro.props;
     <a class="gh-link link reveal" style="--delay:.2s" href={GITHUB_DOWNLOAD_URL}>
       <Icon name="github" size={15} />{d.hero.github}
     </a>
-    <p class="note reveal" style="--delay:.24s">{d.hero.note}</p>
   </div>
 
   <div class="container showcase reveal" style="--delay:.1s">
@@ -41,15 +36,6 @@ const { d, locale } = Astro.props;
 <style>
   .hero { position: relative; padding-top: 72px; overflow: hidden; }
   .hero-copy { display: flex; flex-direction: column; align-items: center; text-align: center; margin-top: -18px; position: relative; z-index: 2; }
-  .badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 6px 12px 6px 10px; border-radius: 999px;
-    background: rgba(255,255,255,.04); border: 1px solid var(--border-strong);
-    font-size: 13px; color: var(--text-2); margin-bottom: 18px;
-    transition: border-color .2s, color .2s;
-  }
-  .badge:hover { border-color: rgba(61,168,255,.5); color: var(--text); }
-  .badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 10px var(--blue); }
   h1 {
     font-size: clamp(38px, 6vw, 68px);
     font-weight: 680; letter-spacing: -.045em; line-height: 1.02;
@@ -58,11 +44,9 @@ const { d, locale } = Astro.props;
     text-wrap: balance;
     padding-bottom: .06em;
   }
-  .lead { margin-top: 18px; max-width: 640px; color: var(--text-2); font-size: clamp(16px, 1.8vw, 19px); text-wrap: pretty; }
-  .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 28px; }
+  .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 36px; }
   .donate { height: 54px; border-radius: 14px; }
-  .gh-link { display: inline-flex; align-items: center; gap: 7px; margin-top: 16px; font-size: 14.5px; }
-  .note { margin-top: 10px; font-size: 13px; color: var(--text-3); }
+  .gh-link { display: inline-flex; align-items: center; gap: 7px; margin-top: 20px; font-size: 14px; color: var(--text-3); }
 
   .showcase { margin-top: clamp(56px, 8vw, 96px); max-width: 1180px; }
   .frame {

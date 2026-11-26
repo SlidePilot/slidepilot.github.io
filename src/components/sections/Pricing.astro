@@ -6,73 +6,91 @@ import type { Dict } from '../../i18n/en';
 interface Props { d: Dict; locale: Locale }
 const { d, locale } = Astro.props;
 const p = d.pricing;
-const plans = [
-  { data: p.github, href: GITHUB_DOWNLOAD_URL, icon: 'github', featured: false },
-  { data: p.appStore, href: APP_STORE_URL, icon: 'apple', featured: true },
-  { data: p.openSource, href: GITHUB_URL, icon: 'code', featured: false },
-] as const;
 ---
 <section class="section" id="pricing">
   <div class="container">
     <div class="section-head center reveal">
       <span class="eyebrow">{p.eyebrow}</span>
       <h2 class="section-title">{p.title}</h2>
-      <p class="section-lead">{p.lead}</p>
+      <p class="section-lead">
+        {p.lead} <a class="link source" href={GITHUB_URL}><Icon name="github" size={15} />{p.source}</a>
+      </p>
     </div>
 
     <div class="plans">
-      {plans.map((plan, i) => (
-        <article class:list={['card', 'plan', 'reveal', { featured: plan.featured }]} style={`--delay:${i * 0.07}s`}>
-          {plan.featured && 'recommended' in plan.data && <span class="flag">{plan.data.recommended}</span>}
-          <div class="label"><Icon name={plan.icon} size={16} />{plan.data.label}</div>
-          <h3>{plan.data.title}</h3>
-          <div class="price">{plan.data.price}</div>
-          <p class="desc">{plan.data.text}</p>
-          <ul>{plan.data.items.map((it) => <li><Icon name="check" size={15} />{it}</li>)}</ul>
-          <a class:list={['btn', plan.featured ? 'btn-primary' : 'btn-secondary']} href={plan.href}>
-            {plan.data.cta}<Icon name="arrow" size={16} />
-          </a>
-        </article>
-      ))}
+      <article class="card plan main reveal">
+        <div class="top">
+          <span class="label"><Icon name="apple" size={16} />{p.appStore.label}</span>
+          <span class="flag">{p.appStore.recommended}</span>
+        </div>
+        <div class="price">{p.appStore.price}<span>{p.appStore.priceNote}</span></div>
+        <p class="desc">{p.appStore.text}</p>
+        <ul>{p.appStore.items.map((it) => <li><Icon name="check" size={15} />{it}</li>)}</ul>
+        <a class="btn btn-primary" href={APP_STORE_URL}>{p.appStore.cta}<Icon name="arrow" size={16} /></a>
+      </article>
+
+      <article class="card plan alt reveal" style="--delay:.07s">
+        <div class="top">
+          <span class="label"><Icon name="github" size={16} />{p.github.label}</span>
+        </div>
+        <div class="price">{p.github.price}<span>{p.github.priceNote}</span></div>
+        <p class="desc">{p.github.text}</p>
+        <ul>{p.github.items.map((it) => <li><Icon name="check" size={15} />{it}</li>)}</ul>
+        <a class="btn btn-secondary" href={GITHUB_DOWNLOAD_URL}>{p.github.cta}<Icon name="arrow" size={16} /></a>
+      </article>
     </div>
 
-    <div class="support card reveal">
-      <div class="support-text">
-        <h3><Icon name="heart" size={20} class="heart" />{p.support.title}</h3>
-        <p>{p.support.text}</p>
-      </div>
-      <div class="support-actions">
-        <a class="btn btn-secondary" href={APP_STORE_URL}><Icon name="bag" />{p.support.buy}</a>
-        <a class="btn btn-secondary" href={path(locale, 'donate')}><Icon name="heart" class="heart" />{p.support.donate}</a>
-        <button class="btn btn-secondary" type="button" data-share data-share-text={p.support.shareText} data-copied={p.support.copied}>
-          <Icon name="share" /><span data-label>{p.support.share}</span>
-        </button>
-      </div>
-    </div>
+    <p class="support reveal">
+      <Icon name="heart" size={16} class="heart" />
+      <span>{p.support.title}</span>
+      <a class="link" href={APP_STORE_URL}>{p.support.buy}</a>
+      <span class="sep" aria-hidden="true">·</span>
+      <a class="link" href={path(locale, 'donate')}>{p.support.donate}</a>
+      <span class="sep" aria-hidden="true">·</span>
+      <button class="link share" type="button" data-share data-share-text={p.support.shareText} data-copied={p.support.copied}>
+        <span data-label>{p.support.share}</span>
+      </button>
+    </p>
   </div>
 </section>
 
 <style>
-  .plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: stretch; }
-  .plan { padding: 28px; display: flex; flex-direction: column; }
-  .plan.featured {
-    background: linear-gradient(180deg, rgba(30,107,245,.18), rgba(255,255,255,.02) 55%);
-    border-color: rgba(61,168,255,.35);
-    box-shadow: 0 30px 80px -30px rgba(30,107,245,.55);
-  }
-  .flag { position: absolute; top: 20px; right: 20px; font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: rgba(61,168,255,.16); color: #9fd0ff; border: 1px solid rgba(61,168,255,.3); }
-  .label { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; color: var(--text-2); font-weight: 550; }
-  .plan h3 { font-size: 22px; font-weight: 650; margin-top: 16px; }
-  .price { font-size: 15px; font-weight: 600; color: var(--blue); margin-top: 6px; }
-  .desc { color: var(--text-2); font-size: 15px; margin-top: 14px; }
-  .plan ul { list-style: none; padding: 0; margin: 20px 0 26px; display: flex; flex-direction: column; gap: 9px; font-size: 14.5px; }
-  .plan li { display: flex; gap: 9px; align-items: flex-start; }
-  .plan li :global(svg) { color: var(--blue); flex: none; margin-top: 3px; }
-  .plan .btn { margin-top: auto; width: 100%; }
+  .source { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
 
-  .support { margin-top: 16px; padding: 26px 28px; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
-  .support h3 { display: flex; align-items: center; gap: 10px; font-size: 19px; font-weight: 640; }
-  .support p { color: var(--text-2); font-size: 15px; margin-top: 6px; max-width: 520px; }
-  .support-actions { display: flex; flex-wrap: wrap; gap: 10px; }
-  @media (max-width: 900px) { .plans { grid-template-columns: 1fr; } }
+  .plans { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; max-width: 900px; margin: 0 auto; align-items: center; }
+  .plan { padding: 32px; display: flex; flex-direction: column; }
+  .main {
+    background: linear-gradient(180deg, rgba(30,107,245,.2), rgba(255,255,255,.02) 60%);
+    border-color: rgba(61,168,255,.35);
+    box-shadow: 0 30px 90px -30px rgba(30,107,245,.6);
+    padding: 40px 36px;
+  }
+  .alt { background: transparent; }
+  .top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .label { display: inline-flex; align-items: center; gap: 7px; font-size: 14px; color: var(--text-2); font-weight: 560; }
+  .flag { font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: rgba(61,168,255,.16); color: #9fd0ff; border: 1px solid rgba(61,168,255,.3); }
+
+  .price { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px; margin-top: 18px; font-size: 44px; font-weight: 680; letter-spacing: -.04em; line-height: 1; }
+  .price span { font-size: 15px; font-weight: 560; letter-spacing: -.01em; color: var(--blue); }
+  .alt .price { font-size: 32px; color: var(--text); }
+  .alt .price span { color: var(--text-3); }
+
+  .desc { color: var(--text-2); font-size: 15px; margin-top: 16px; }
+  .alt .desc { color: var(--text-3); }
+  .plan ul { list-style: none; padding: 0; margin: 20px 0 28px; display: flex; flex-direction: column; gap: 8px; font-size: 14.5px; }
+  .plan li { display: flex; gap: 9px; align-items: center; }
+  .plan li :global(svg) { color: var(--blue); flex: none; }
+  .alt li { color: var(--text-2); }
+  .alt li :global(svg) { color: var(--text-3); }
+  .plan .btn { width: 100%; }
+
+  .support { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 10px; margin-top: 40px; font-size: 15px; color: var(--text-2); }
+  .support .sep { color: var(--text-3); }
+  .share { background: none; border: 0; padding: 0; font: inherit; cursor: pointer; }
+
+  @media (max-width: 760px) {
+    .plans { grid-template-columns: 1fr; }
+    .main { padding: 32px 26px; }
+    .plan { padding: 28px 24px; }
+  }
 </style>

@@ -10,7 +10,6 @@ const l = d.latex;
     <div class="section-head reveal">
       <span class="eyebrow"><Icon name="code" size={15} />{l.eyebrow}</span>
       <h2 class="section-title">{l.title}</h2>
-      <p class="section-lead">{l.lead}</p>
     </div>
 
     <div class="grid">
@@ -39,7 +38,7 @@ const l = d.latex;
         <div class="copy"><h3>{l.notes.title}</h3><p set:html={l.notes.text} /></div>
       </article>
 
-      <article class="card reveal" style="--delay:.08s">
+      <article class="card calm reveal" style="--delay:.08s">
         <div class="term" aria-hidden="true">
           <div class="term-bar"><span></span><span></span><span></span></div>
           <pre><span class="c">$</span> latexmk -pdf -pvc talk.tex
@@ -51,7 +50,7 @@ const l = d.latex;
         <div class="copy"><h3>{l.reload.title}</h3><p>{l.reload.text}</p></div>
       </article>
 
-      <article class="card reveal" style="--delay:.12s">
+      <article class="card calm reveal" style="--delay:.12s">
         <div class="links-illo" aria-hidden="true">
           <div class="vid">
             <div class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></div>
@@ -75,8 +74,10 @@ const l = d.latex;
   .big.card { display: grid; }
   .copy { padding: 0 28px 26px; margin-top: auto; }
   .big .copy { padding: 36px 40px 36px 0; }
-  .copy h3 { font-size: 19px; font-weight: 620; letter-spacing: -.02em; }
-  .copy p { margin-top: 6px; color: var(--text-2); font-size: 15px; }
+  .copy h3 { font-size: 17px; font-weight: 620; letter-spacing: -.015em; }
+  .copy p { margin-top: 4px; color: var(--text-3); font-size: 14.5px; }
+  .big .copy h3 { font-size: 22px; letter-spacing: -.022em; }
+  .big .copy p { color: var(--text-2); font-size: 15.5px; margin-top: 8px; }
   .copy :global(code) { font-family: var(--mono); font-size: .86em; padding: 1px 5px; border-radius: 5px; background: rgba(255,255,255,.07); color: #cfe3ff; word-break: break-word; }
   @media (max-width: 860px) {
     .grid { grid-template-columns: 1fr; }
@@ -119,7 +120,7 @@ const l = d.latex;
   }
   .spin { width: 12px; height: 12px; border-radius: 50%; border: 2px solid rgba(61,168,255,.3); border-top-color: var(--blue); animation: spin 1s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  @keyframes toast { 0%, 20% { opacity: 0; transform: translateY(8px); } 30%, 85% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+  @keyframes toast { 0%, 55% { opacity: 1; transform: none; } 65% { opacity: 0; transform: translateY(8px); } 75% { opacity: 0; transform: translateY(8px); } 85%, 100% { opacity: 1; transform: none; } }
 
   /* links & video */
   .links-illo { margin: 24px 24px 20px; display: flex; flex-direction: column; gap: 14px; align-items: center; justify-content: center; min-height: 200px; }
@@ -128,7 +129,7 @@ const l = d.latex;
   .play svg { width: 22px; margin-left: 3px; }
   .progress { position: absolute; left: 10px; right: 10px; bottom: 10px; height: 3px; border-radius: 2px; background: rgba(255,255,255,.2); overflow: hidden; }
   .progress span { display: block; height: 100%; width: 0; background: #fff; animation: prog 6s linear infinite; }
-  @keyframes prog { to { width: 100%; } }
+  @keyframes prog { from { width: 35%; } to { width: 100%; } }
   .chips { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
   .chips span { display: inline-flex; align-items: center; gap: 5px; font: 500 12px var(--mono); padding: 5px 10px; border-radius: 999px; background: rgba(61,168,255,.1); color: #9fd0ff; border: 1px solid rgba(61,168,255,.25); }
 </style>
