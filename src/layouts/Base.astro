@@ -15,11 +15,14 @@ interface Props {
   description?: string;
   /** Detect the browser language and redirect (only on the English home page). */
   detectLanguage?: boolean;
+  /** Unlisted single-language page: noindex, no hreflang alternates, language links go to the home pages. */
+  unlisted?: boolean;
 }
 
-const { locale, page = '', title, description } = Astro.props;
+const { locale, page = '', title, description, unlisted = false } = Astro.props;
 // English pages send first-time visitors to their browser language (not the 404 page, which would loop).
-const detectLanguage = Astro.props.detectLanguage ?? (locale === 'en' && page !== '404');
+const detectLanguage = Astro.props.detectLanguage ?? (locale === 'en' && page !== '404' && !unlisted);
+const langPage = unlisted ? '' : page;
 const d = t(locale);
 const pageTitle = title ?? d.meta.title;
 const pageDescription = description ?? d.meta.description;
@@ -36,10 +39,16 @@ const year = new Date().getFullYear();
     <meta name="description" content={pageDescription} />
     <meta name="theme-color" content="#06070a" />
     <link rel="canonical" href={canonical} />
-    {locales.map((l) => (
-      <link rel="alternate" hreflang={l} href={new URL(path(l, page), Astro.site)} />
-    ))}
-    <link rel="alternate" hreflang="x-default" href={new URL(path('en', page), Astro.site)} />
+    {unlisted ? (
+      <meta name="robots" content="noindex, nofollow" />
+    ) : (
+      <>
+        {locales.map((l) => (
+          <link rel="alternate" hreflang={l} href={new URL(path(l, page), Astro.site)} />
+        ))}
+        <link rel="alternate" hreflang="x-default" href={new URL(path('en', page), Astro.site)} />
+      </>
+    )}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta property="og:type" content="website" />
@@ -91,7 +100,7 @@ const year = new Date().getFullYear();
             </summary>
             <div class="menu-pop">
               {locales.map((l) => (
-                <a href={path(l, page)} hreflang={l} lang={l} data-lang={l} aria-current={l === locale ? 'true' : undefined}>
+                <a href={path(l, langPage)} hreflang={l} lang={l} data-lang={l} aria-current={l === locale ? 'true' : undefined}>
                   {localeNames[l]}
                   {l === locale && <Icon name="check" size={15} />}
                 </a>
@@ -158,7 +167,7 @@ const year = new Date().getFullYear();
           <span>© {year} SlidePilot. {d.footer.rights}</span>
           <span class="footer-langs">
             {locales.map((l) => (
-              <a href={path(l, page)} hreflang={l} data-lang={l} aria-current={l === locale ? 'true' : undefined}>{localeNames[l]}</a>
+              <a href={path(l, langPage)} hreflang={l} data-lang={l} aria-current={l === locale ? 'true' : undefined}>{localeNames[l]}</a>
             ))}
           </span>
         </div>

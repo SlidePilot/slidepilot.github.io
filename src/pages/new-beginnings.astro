@@ -1,0 +1,65 @@
+---
+// Unlisted letter: only reachable via its direct link, not linked anywhere on the site.
+import Base from '../layouts/Base.astro';
+import { APP_STORE_URL, CONTACT_EMAIL } from '../config';
+
+const title = 'A message from SlidePilot’s developer';
+---
+<Base locale="en" page="new-beginnings" title={`${title} – SlidePilot`} description="SlidePilot 2.0 is here: a note on what changes, what stays the same and how to support SlidePilot." unlisted>
+  <article class="letter container">
+    <header>
+      <p class="kicker">SlidePilot 2.0</p>
+      <h1>{title}</h1>
+    </header>
+
+    <div class="prose">
+      <p>Since its release in 2019, SlidePilot has been used by students, academics and professionals all over the world. Throughout the years I’ve received many messages on how people use SlidePilot in their daily work, which has made me very happy and which I am very grateful for.</p>
+
+      <p>I never expected SlidePilot to be used by so many people from so many places. SlidePilot didn’t receive any major updates in the past years. So I wanted to give SlidePilot a fresh start, so that it can be a useful tool for many more people and many more years in the future.</p>
+
+      <p>That’s why the complete app has been rewritten to be used not only on Mac but also on iPad and iPhone and today SlidePilot 2.0 is released. Some things will stay the same, some things will change. First things first: <strong>SlidePilot has always been open source and free to download, this will not change!</strong></p>
+
+      <p>However there is a new concept. SlidePilot’s source code for all supported platforms is available on GitHub plus the Mac app can be downloaded there as well. Additionally SlidePilot is published as a universal app in the App Store for all platforms. It is free to try and the full version is a one-time paid upgrade. The only difference between the GitHub download and the App Store version is the convenience of automatic updates and of course your support for the SlidePilot development.</p>
+
+      <p>The reason for this new concept is to improve financial support for the development of SlidePilot. Still I believe in the concept of open source and voluntary payment.</p>
+
+      <p>To see what the new app is capable of, please visit the <a href="/">SlidePilot website</a>. The new app requires macOS 26 or later, that is why the old version will still be available on GitHub.</p>
+
+      <p>These are all the ways to support SlidePilot:</p>
+      <ul>
+        <li>Download the app from the <a href={APP_STORE_URL}>App Store</a> and purchase the full version</li>
+        <li><a href="/donate/">Donate</a> on the SlidePilot website</li>
+        <li>And of course spread the word about SlidePilot</li>
+      </ul>
+
+      <p>To show my appreciation for everyone who has supported SlidePilot in the past, I want to give away the SlidePilot App Store version to everyone who has ever contributed to the code base or made a donation. If you want to take advantage of this, please write an email to <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> with the email of your GitHub account with which you committed or your PayPal donation email.</p>
+
+      <p>Thank you for your ongoing support of SlidePilot and may it be a useful tool for you!</p>
+
+      <p class="signoff">All the best<br /><span class="signature">Pascal</span></p>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .letter { max-width: 700px; padding-top: 140px; padding-bottom: 80px; }
+  header { margin-bottom: 44px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+  .kicker { color: var(--blue); font-size: 14px; font-weight: 600; letter-spacing: .02em; margin-bottom: 14px; }
+  h1 { font-size: clamp(32px, 5vw, 46px); line-height: 1.1; font-weight: 680; letter-spacing: -.03em; color: var(--text); text-wrap: balance; }
+
+  .prose { color: var(--text-2); font-size: 17.5px; line-height: 1.8; }
+  .prose p, .prose ul { margin: 0 0 22px; }
+  .prose ul { padding-left: 22px; }
+  .prose li { margin-bottom: 8px; }
+  .prose li::marker { color: var(--blue); }
+  .prose strong { color: var(--text); font-weight: 600; }
+  .prose a { color: var(--text); text-decoration: underline; text-decoration-color: rgba(61,168,255,.6); text-underline-offset: 3px; word-break: break-word; transition: text-decoration-color .2s; }
+  .prose a:hover { text-decoration-color: var(--blue); }
+  .signoff { margin-top: 36px; }
+  .signature { display: inline-block; margin-top: 6px; color: var(--text); font-size: 22px; font-weight: 600; letter-spacing: -.02em; }
+
+  @media (max-width: 520px) {
+    .letter { padding-top: 112px; }
+    .prose { font-size: 16.5px; }
+  }
+</style>
