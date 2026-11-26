@@ -1,0 +1,16 @@
+---
+// The SlidePilot glyph (hub + horns of the app icon).
+import { HUB, HORNS } from './logoPaths';
+interface Props { class?: string; id?: string }
+const { class: cls, id = 'g' } = Astro.props;
+---
+<svg class={cls} viewBox="140 250 744 480" aria-hidden="true">
+  <defs>
+    <linearGradient id={`${id}-fill`} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" />
+      <stop offset="1" stop-color="#b8dcff" />
+    </linearGradient>
+  </defs>
+  <path d={HORNS} fill={`url(#${id}-fill)`} />
+  <path d={HUB} fill={`url(#${id}-fill)`} />
+</svg>

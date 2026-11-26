@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import AppIcon from '../components/AppIcon.astro';
+import { t } from '../i18n';
+const d = t('en');
+---
+<Base locale="en" page="404" title="404 – SlidePilot">
+  <section class="nf container">
+    <AppIcon size={72} />
+    <p class="code">404</p>
+    <h1 class="section-title">{d.notFound.title}</h1>
+    <p class="section-lead">{d.notFound.text}</p>
+    <a class="btn btn-primary" href="/">{d.notFound.back}</a>
+  </section>
+</Base>
+<style>
+  .nf { min-height: 80vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 16px; padding-top: 100px; }
+  .code { font: 600 14px var(--mono); color: var(--blue); letter-spacing: .2em; margin-top: 10px; }
+  .btn { margin-top: 12px; }
+</style>

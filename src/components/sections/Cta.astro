@@ -1,0 +1,34 @@
+---
+import AppStoreButton from '../AppStoreButton.astro';
+import AppIcon from '../AppIcon.astro';
+import Icon from '../Icon.astro';
+import { path, type Locale } from '../../i18n';
+import { GITHUB_DOWNLOAD_URL } from '../../config';
+import type { Dict } from '../../i18n/en';
+interface Props { d: Dict; locale: Locale }
+const { d, locale } = Astro.props;
+---
+<section class="cta">
+  <div class="container">
+    <div class="box reveal">
+      <div class="glow" aria-hidden="true"></div>
+      <AppIcon size={84} class="icon" />
+      <h2 class="section-title">{d.cta.title}</h2>
+      <p class="section-lead">{d.cta.text}</p>
+      <div class="actions">
+        <AppStoreButton d={d} />
+        <a class="btn btn-secondary btn-lg donate" href={path(locale, 'donate')}><Icon name="heart" size={18} class="heart" />{d.hero.donate}</a>
+      </div>
+      <a class="link gh" href={GITHUB_DOWNLOAD_URL}><Icon name="github" size={15} />{d.hero.github}</a>
+    </div>
+  </div>
+</section>
+<style>
+  .cta { padding: 40px 0 100px; }
+  .box { position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px; padding: clamp(48px, 8vw, 88px) 24px; border-radius: 32px; border: 1px solid var(--border); background: radial-gradient(ellipse 70% 90% at 50% 0%, rgba(30,107,245,.28), transparent 70%), var(--bg-raised); }
+  .glow { position: absolute; top: -40%; left: 50%; width: 600px; height: 400px; transform: translateX(-50%); background: radial-gradient(closest-side, rgba(61,168,255,.35), transparent); filter: blur(20px); pointer-events: none; }
+  .box :global(.icon) { margin-bottom: 10px; box-shadow: 0 20px 60px -10px rgba(30,107,245,.9), inset 0 0 0 1px rgba(255,255,255,.25); }
+  .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 14px; }
+  .donate { height: 54px; border-radius: 14px; }
+  .gh { display: inline-flex; align-items: center; gap: 7px; font-size: 14.5px; margin-top: 4px; }
+</style>

@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Donate – SlidePilot</title>
+  <meta name="robots" content="noindex">
+  <link rel="canonical" href="https://slidepilotapp.com/donate/">
+  <noscript><meta http-equiv="refresh" content="0; url=/donate/"></noscript>
+  <script>
+    // Old donation link used by SlidePilot. Forwards to the donation page in the browser's language.
+    var l = (navigator.language || '').slice(0, 2).toLowerCase();
+    location.replace(l === 'de' ? '/de/donate/' : l === 'fr' ? '/fr/donate/' : '/donate/');
+  </script>
+</head>
+<body><a href="/donate/">SlidePilot – Donate</a></body>
+</html>

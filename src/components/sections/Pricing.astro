@@ -1,0 +1,78 @@
+---
+import Icon from '../Icon.astro';
+import { path, type Locale } from '../../i18n';
+import { APP_STORE_URL, GITHUB_DOWNLOAD_URL, GITHUB_URL } from '../../config';
+import type { Dict } from '../../i18n/en';
+interface Props { d: Dict; locale: Locale }
+const { d, locale } = Astro.props;
+const p = d.pricing;
+const plans = [
+  { data: p.github, href: GITHUB_DOWNLOAD_URL, icon: 'github', featured: false },
+  { data: p.appStore, href: APP_STORE_URL, icon: 'apple', featured: true },
+  { data: p.openSource, href: GITHUB_URL, icon: 'code', featured: false },
+] as const;
+---
+<section class="section" id="pricing">
+  <div class="container">
+    <div class="section-head center reveal">
+      <span class="eyebrow">{p.eyebrow}</span>
+      <h2 class="section-title">{p.title}</h2>
+      <p class="section-lead">{p.lead}</p>
+    </div>
+
+    <div class="plans">
+      {plans.map((plan, i) => (
+        <article class:list={['card', 'plan', 'reveal', { featured: plan.featured }]} style={`--delay:${i * 0.07}s`}>
+          {plan.featured && 'recommended' in plan.data && <span class="flag">{plan.data.recommended}</span>}
+          <div class="label"><Icon name={plan.icon} size={16} />{plan.data.label}</div>
+          <h3>{plan.data.title}</h3>
+          <div class="price">{plan.data.price}</div>
+          <p class="desc">{plan.data.text}</p>
+          <ul>{plan.data.items.map((it) => <li><Icon name="check" size={15} />{it}</li>)}</ul>
+          <a class:list={['btn', plan.featured ? 'btn-primary' : 'btn-secondary']} href={plan.href}>
+            {plan.data.cta}<Icon name="arrow" size={16} />
+          </a>
+        </article>
+      ))}
+    </div>
+
+    <div class="support card reveal">
+      <div class="support-text">
+        <h3><Icon name="heart" size={20} class="heart" />{p.support.title}</h3>
+        <p>{p.support.text}</p>
+      </div>
+      <div class="support-actions">
+        <a class="btn btn-secondary" href={APP_STORE_URL}><Icon name="bag" />{p.support.buy}</a>
+        <a class="btn btn-secondary" href={path(locale, 'donate')}><Icon name="heart" class="heart" />{p.support.donate}</a>
+        <button class="btn btn-secondary" type="button" data-share data-share-text={p.support.shareText} data-copied={p.support.copied}>
+          <Icon name="share" /><span data-label>{p.support.share}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: stretch; }
+  .plan { padding: 28px; display: flex; flex-direction: column; }
+  .plan.featured {
+    background: linear-gradient(180deg, rgba(30,107,245,.18), rgba(255,255,255,.02) 55%);
+    border-color: rgba(61,168,255,.35);
+    box-shadow: 0 30px 80px -30px rgba(30,107,245,.55);
+  }
+  .flag { position: absolute; top: 20px; right: 20px; font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: rgba(61,168,255,.16); color: #9fd0ff; border: 1px solid rgba(61,168,255,.3); }
+  .label { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; color: var(--text-2); font-weight: 550; }
+  .plan h3 { font-size: 22px; font-weight: 650; margin-top: 16px; }
+  .price { font-size: 15px; font-weight: 600; color: var(--blue); margin-top: 6px; }
+  .desc { color: var(--text-2); font-size: 15px; margin-top: 14px; }
+  .plan ul { list-style: none; padding: 0; margin: 20px 0 26px; display: flex; flex-direction: column; gap: 9px; font-size: 14.5px; }
+  .plan li { display: flex; gap: 9px; align-items: flex-start; }
+  .plan li :global(svg) { color: var(--blue); flex: none; margin-top: 3px; }
+  .plan .btn { margin-top: auto; width: 100%; }
+
+  .support { margin-top: 16px; padding: 26px 28px; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+  .support h3 { display: flex; align-items: center; gap: 10px; font-size: 19px; font-weight: 640; }
+  .support p { color: var(--text-2); font-size: 15px; margin-top: 6px; max-width: 520px; }
+  .support-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+  @media (max-width: 900px) { .plans { grid-template-columns: 1fr; } }
+</style>

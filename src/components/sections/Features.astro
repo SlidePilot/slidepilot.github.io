@@ -1,0 +1,235 @@
+---
+import { Image } from 'astro:assets';
+import { screen } from '../screens';
+import type { Locale } from '../../i18n';
+import type { Dict } from '../../i18n/en';
+interface Props { d: Dict; locale: Locale }
+const { d, locale } = Astro.props;
+const f = d.features;
+const thumbs = Array.from({ length: 8 }, (_, i) => i);
+---
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-head center reveal">
+      <span class="eyebrow">{f.eyebrow}</span>
+      <h2 class="section-title">{f.title}</h2>
+      <p class="section-lead">{f.lead}</p>
+    </div>
+
+    <div class="bento">
+      <!-- Layout -->
+      <article class="card tile span-2 reveal">
+        <div class="illo illo-layout" aria-hidden="true">
+          <div class="win">
+            <div class="pane p-current"><span>{d.illo.current}</span><div class="slide"><i></i><b></b><b class="short"></b></div></div>
+            <div class="pane p-next"><span>{d.illo.next}</span><div class="slide"><i></i><b></b></div></div>
+            <div class="pane p-notes"><span>{d.illo.notes}</span><div class="lines"><b></b><b></b><b class="short"></b></div></div>
+          </div>
+        </div>
+        <div class="copy"><h3>{f.presenter.title}</h3><p>{f.presenter.text}</p></div>
+      </article>
+
+      <!-- Timer -->
+      <article class="card tile reveal" style="--delay:.08s">
+        <div class="illo illo-timer" aria-hidden="true" data-timer>
+          <svg viewBox="0 0 120 120" class="ring">
+            <circle cx="60" cy="60" r="52" class="track" />
+            <circle cx="60" cy="60" r="52" class="bar" pathLength="100" />
+          </svg>
+          <div class="time"><span data-time>05:00</span><small>{d.illo.countdown}</small></div>
+        </div>
+        <div class="copy"><h3>{f.timer.title}</h3><p>{f.timer.text}</p></div>
+      </article>
+
+      <!-- Pointer -->
+      <article class="card tile reveal">
+        <div class="illo illo-pointer" aria-hidden="true">
+          <div class="slide-big">
+            <i class="title"></i>
+            <div class="chart"><b style="--h:40%"></b><b style="--h:65%"></b><b style="--h:52%"></b><b style="--h:88%"></b><b style="--h:70%"></b></div>
+            <div class="ptr"><span class="p-dot"></span><span class="p-circle"></span><span class="p-target"></span><svg class="p-cursor" viewBox="0 0 24 24"><path d="M5 3l14 8-6.5 1.5L10 19z" fill="#fff" stroke="#000" stroke-width="1.2" stroke-linejoin="round"/></svg></div>
+          </div>
+        </div>
+        <div class="copy"><h3>{f.pointer.title}</h3><p>{f.pointer.text}</p></div>
+      </article>
+
+      <!-- Drawing -->
+      <article class="card tile span-2 tile-shot reveal" style="--delay:.08s">
+        <div class="shot">
+          <Image src={screen('drawing', locale)} alt={f.drawing.alt} widths={[600, 1000, 1400]} sizes="(max-width: 900px) 92vw, 720px" />
+          <svg class="scribble" viewBox="0 0 400 200" aria-hidden="true"><path d="M40 150 C 90 60, 160 40, 220 90 S 330 170, 370 60" /></svg>
+        </div>
+        <div class="copy"><h3>{f.drawing.title}</h3><p>{f.drawing.text}</p></div>
+      </article>
+
+      <!-- Notes -->
+      <article class="card tile reveal">
+        <div class="illo illo-notes" aria-hidden="true">
+          <div class="doc">
+            <div class="toolbar"><b>B</b><i>I</i><u>U</u><span>•</span></div>
+            <p><strong>{d.illo.noteTitle}</strong> – {d.illo.noteIntro}</p>
+            <ul><li>{d.illo.noteItems[0]}</li><li>{d.illo.noteItems[1]}</li><li class="typing">{d.illo.noteItems[2]}<span class="caret"></span></li></ul>
+          </div>
+        </div>
+        <div class="copy"><h3>{f.notes.title}</h3><p>{f.notes.text}</p></div>
+      </article>
+
+      <!-- Curtain -->
+      <article class="card tile reveal" style="--delay:.06s">
+        <div class="illo illo-curtain" aria-hidden="true">
+          <div class="slide-big"><i class="title"></i><b></b><b></b><b class="short"></b><div class="curtain"></div></div>
+        </div>
+        <div class="copy"><h3>{f.curtain.title}</h3><p>{f.curtain.text}</p></div>
+      </article>
+
+      <!-- Navigator -->
+      <article class="card tile reveal" style="--delay:.12s">
+        <div class="illo illo-nav" aria-hidden="true">
+          <div class="thumbs">
+            {thumbs.map((i) => <div class="thumb" style={`--i:${i}`}><i></i><b></b><span>{i + 1}</span></div>)}
+          </div>
+        </div>
+        <div class="copy"><h3>{f.navigator.title}</h3><p>{f.navigator.text}</p></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Countdown demo: 05:00 → 00:00 at high speed, with the two warnings.
+  document.querySelectorAll<HTMLElement>('[data-timer]').forEach((el) => {
+    const out = el.querySelector('[data-time]')!;
+    const total = 300;
+    let left = total;
+    let timer = 0;
+    const render = () => {
+      const m = Math.floor(left / 60), s = left % 60;
+      out.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      el.style.setProperty('--p', String(left / total));
+      el.dataset.state = left <= 30 ? 'red' : left <= 120 ? 'yellow' : 'ok';
+    };
+    const tick = () => { left = left <= 0 ? total : left - 1; render(); };
+    render();
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { left = 95; render(); return; }
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !timer) timer = window.setInterval(tick, 45);
+      else if (!e.isIntersecting && timer) { clearInterval(timer); timer = 0; }
+    }).observe(el);
+  });
+</script>
+
+<style>
+  .bento { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .tile { display: flex; flex-direction: column; min-height: 360px; }
+  .span-2 { grid-column: span 2; }
+  .copy { padding: 0 28px 26px; margin-top: auto; }
+  .copy h3 { font-size: 19px; font-weight: 620; letter-spacing: -.02em; }
+  .copy p { margin-top: 6px; color: var(--text-2); font-size: 15px; max-width: 460px; }
+  .illo { flex: 1; display: grid; place-items: center; padding: 28px; min-height: 230px; position: relative; }
+
+  @media (max-width: 900px) {
+    .bento { grid-template-columns: 1fr 1fr; }
+    .span-2 { grid-column: 1 / -1; }
+  }
+  @media (max-width: 620px) {
+    .bento { grid-template-columns: 1fr; }
+    .tile { min-height: 0; }
+  }
+
+  /* Shared mini-slide parts */
+  .slide, .slide-big { background: #fff; border-radius: 6px; position: relative; overflow: hidden; }
+  .slide i, .slide-big .title { display: block; height: 8%; min-height: 6px; width: 55%; background: #2b6fe6; border-radius: 3px; margin: 8% 8% 6%; }
+  .slide b, .slide-big b { display: block; height: 5px; margin: 0 8% 7px; background: #d6dbe4; border-radius: 3px; }
+  .short { width: 45%; }
+
+  /* Layout illustration */
+  .illo-layout .win {
+    position: relative; width: min(100%, 520px); aspect-ratio: 16 / 8.4;
+    background: #111318; border: 1px solid var(--border-strong); border-radius: 12px;
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,.7);
+  }
+  .pane { position: absolute; display: flex; flex-direction: column; gap: 5px; transition: all .8s var(--ease); }
+  .pane > span { font-size: 10px; color: var(--text-3); text-align: center; }
+  .pane .slide { flex: 1; }
+  .pane .lines { flex: 1; background: #fff; border-radius: 6px; padding: 10% 8%; }
+  .pane .lines b { display: block; height: 5px; background: #d6dbe4; border-radius: 3px; margin-bottom: 8px; }
+  .p-current { animation: lay-current 12s var(--ease) infinite; }
+  .p-next { animation: lay-next 12s var(--ease) infinite; }
+  .p-notes { animation: lay-notes 12s var(--ease) infinite; }
+  @keyframes lay-current {
+    0%, 28% { left: 4%; top: 7%; width: 56%; height: 86%; }
+    33%, 61% { left: 40%; top: 7%; width: 56%; height: 86%; }
+    66%, 95% { left: 4%; top: 7%; width: 44%; height: 40%; }
+    100% { left: 4%; top: 7%; width: 56%; height: 86%; }
+  }
+  @keyframes lay-next {
+    0%, 28% { left: 64%; top: 7%; width: 32%; height: 40%; }
+    33%, 61% { left: 4%; top: 7%; width: 32%; height: 40%; }
+    66%, 95% { left: 52%; top: 7%; width: 44%; height: 40%; }
+    100% { left: 64%; top: 7%; width: 32%; height: 40%; }
+  }
+  @keyframes lay-notes {
+    0%, 28% { left: 64%; top: 53%; width: 32%; height: 40%; }
+    33%, 61% { left: 4%; top: 53%; width: 32%; height: 40%; }
+    66%, 95% { left: 4%; top: 53%; width: 92%; height: 40%; }
+    100% { left: 64%; top: 53%; width: 32%; height: 40%; }
+  }
+
+  /* Timer */
+  .illo-timer { --p: 1; --c: #fff; }
+  .illo-timer[data-state='yellow'] { --c: #ffd23d; }
+  .illo-timer[data-state='red'] { --c: #ff5a5a; }
+  .ring { width: 190px; height: 190px; transform: rotate(-90deg); }
+  .ring circle { fill: none; stroke-width: 5; }
+  .track { stroke: rgba(255,255,255,.08); }
+  .bar { stroke: var(--c); stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: calc(100 - var(--p) * 100); transition: stroke .4s; filter: drop-shadow(0 0 6px var(--c)); }
+  .time { position: absolute; display: flex; flex-direction: column; align-items: center; }
+  .time span { font-size: 40px; font-weight: 300; letter-spacing: -.02em; font-variant-numeric: tabular-nums; color: var(--c); transition: color .4s; }
+  .time small { font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: .12em; }
+
+  /* Pointer */
+  .illo-pointer .slide-big { width: min(100%, 280px); aspect-ratio: 4 / 3; }
+  .chart { position: absolute; left: 12%; right: 12%; bottom: 14%; height: 52%; display: flex; align-items: flex-end; gap: 9%; border-bottom: 2px solid #cfd6e2; }
+  .chart b { flex: 1; height: var(--h) !important; margin: 0 !important; background: linear-gradient(#5aa9ff, #2b6fe6) !important; border-radius: 3px 3px 0 0 !important; }
+  .ptr { position: absolute; left: 0; top: 0; width: 26px; height: 26px; animation: ptr-move 10s ease-in-out infinite; }
+  .ptr > * { position: absolute; inset: 0; margin: auto; opacity: 0; animation: ptr-style 10s infinite; }
+  .p-dot { width: 14px; height: 14px; border-radius: 50%; background: #ff2d55; box-shadow: 0 0 12px #ff2d55; animation-delay: 0s !important; }
+  .p-circle { width: 26px; height: 26px; border-radius: 50%; border: 3px solid #ff9f0a; animation-delay: -7.5s !important; }
+  .p-target { width: 26px; height: 26px; border-radius: 50%; border: 2px solid #30d158; box-shadow: inset 0 0 0 5px #fff, inset 0 0 0 8px #30d158; animation-delay: -5s !important; }
+  .p-cursor { width: 24px; height: 24px; animation-delay: -2.5s !important; }
+  @keyframes ptr-style { 0%, 22% { opacity: 1; } 25%, 97% { opacity: 0; } 100% { opacity: 1; } }
+  @keyframes ptr-move {
+    0% { transform: translate(40px, 140px); }
+    25% { transform: translate(120px, 100px); }
+    50% { transform: translate(180px, 60px); }
+    75% { transform: translate(230px, 120px); }
+    100% { transform: translate(40px, 140px); }
+  }
+
+  /* Drawing (screenshot) */
+  .tile-shot .shot { position: relative; margin: 24px 24px 22px; border-radius: 14px; overflow: hidden; border: 1px solid var(--border); background: #fff; }
+  .tile-shot .shot :global(img) { width: 100%; display: block; aspect-ratio: 2853 / 1500; object-fit: cover; object-position: top; }
+  .scribble { position: absolute; right: 9%; bottom: 10%; width: 30%; pointer-events: none; }
+  .scribble path { fill: none; stroke: #ff3b8d; stroke-width: 5; stroke-linecap: round; stroke-dasharray: 600; stroke-dashoffset: 600; animation: draw 6s ease-in-out infinite; }
+  @keyframes draw { 0% { stroke-dashoffset: 600; opacity: 1; } 45%, 80% { stroke-dashoffset: 0; opacity: 1; } 95%, 100% { stroke-dashoffset: 0; opacity: 0; } }
+
+  /* Notes */
+  .doc { width: min(100%, 290px); background: #fff; color: #1b1f27; border-radius: 10px; padding: 14px 16px 16px; font-size: 13px; line-height: 1.5; box-shadow: 0 30px 60px -20px rgba(0,0,0,.7); }
+  .doc .toolbar { display: flex; gap: 12px; padding-bottom: 9px; margin-bottom: 9px; border-bottom: 1px solid #e6e9ef; color: #6b7280; font-size: 12px; }
+  .doc ul { margin: 6px 0 0; padding-left: 18px; }
+  .caret { display: inline-block; width: 1.5px; height: 14px; background: #1e6bf5; margin-left: 1px; vertical-align: -2px; animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* Curtain */
+  .illo-curtain .slide-big { width: min(100%, 280px); aspect-ratio: 4 / 3; }
+  .curtain { position: absolute; inset: 0; background: #000; transform: translateY(-100%); animation: curtain 6s var(--ease) infinite; }
+  @keyframes curtain { 0%, 30% { transform: translateY(-101%); } 45%, 75% { transform: translateY(0); } 90%, 100% { transform: translateY(-101%); } }
+
+  /* Navigator */
+  .thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: min(100%, 300px); }
+  .thumb { position: relative; aspect-ratio: 4 / 3; background: #fff; border-radius: 5px; padding: 12% 10%; outline: 2px solid transparent; outline-offset: 2px; animation: thumb 8s infinite; animation-delay: calc(var(--i) * 1s); }
+  .thumb i { display: block; height: 14%; width: 70%; background: #2b6fe6; border-radius: 2px; }
+  .thumb b { display: block; height: 8%; width: 85%; margin-top: 14%; background: #d6dbe4; border-radius: 2px; }
+  .thumb span { position: absolute; right: 4px; bottom: 1px; font-size: 8px; color: #8a93a3; }
+  @keyframes thumb { 0%, 12% { outline-color: var(--blue); } 13%, 100% { outline-color: transparent; } }
+</style>

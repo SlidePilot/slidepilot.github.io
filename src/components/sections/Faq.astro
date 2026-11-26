@@ -1,0 +1,55 @@
+---
+import Icon from '../Icon.astro';
+import { path, type Locale } from '../../i18n';
+import type { Dict } from '../../i18n/en';
+interface Props { d: Dict; locale: Locale }
+const { d, locale } = Astro.props;
+const fill = (s: string) => s.replaceAll('{donate}', path(locale, 'donate'));
+---
+<section class="section" id="faq">
+  <div class="container faq-layout">
+    <div class="section-head reveal">
+      <span class="eyebrow">{d.faq.eyebrow}</span>
+      <h2 class="section-title">{d.faq.title}</h2>
+    </div>
+    <div class="groups">
+      {d.faq.groups.map((g) => (
+        <div class="group reveal">
+          <h3>{g.title}</h3>
+          {g.items.map((item) => (
+            <details>
+              <summary>{item.q}<span class="plus"><Icon name="plus" size={16} /></span></summary>
+              <div class="answer" set:html={fill(item.a)} />
+            </details>
+          ))}
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq-layout { display: grid; grid-template-columns: 1fr 2fr; gap: 48px; align-items: start; }
+  .faq-layout .section-head { position: sticky; top: 100px; }
+  .groups { display: flex; flex-direction: column; gap: 36px; }
+  .group h3 { font-size: 13px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; }
+  details { border-bottom: 1px solid var(--border); }
+  summary {
+    list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    padding: 18px 0; font-size: 17px; font-weight: 560; letter-spacing: -.01em;
+    transition: color .2s;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary:hover { color: #fff; }
+  .plus { flex: none; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--surface-strong); color: var(--text-2); transition: transform .3s var(--ease), background .2s; }
+  details[open] .plus { transform: rotate(45deg); background: rgba(61,168,255,.18); color: var(--blue); }
+  .answer { padding: 0 44px 20px 0; color: var(--text-2); font-size: 15.5px; line-height: 1.65; animation: fade .3s var(--ease); }
+  .answer :global(a) { color: var(--text); text-decoration: underline; text-decoration-color: rgba(61,168,255,.6); text-underline-offset: 3px; }
+  .answer :global(strong) { color: var(--text); font-weight: 600; }
+  @keyframes fade { from { opacity: 0; transform: translateY(-4px); } }
+  @media (max-width: 860px) {
+    .faq-layout { grid-template-columns: 1fr; gap: 0; }
+    .faq-layout .section-head { position: static; }
+    .answer { padding-right: 0; }
+  }
+</style>
