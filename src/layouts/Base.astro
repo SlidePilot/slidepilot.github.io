@@ -1,0 +1,312 @@
+---
+import '../styles/global.css';
+import AppIcon from '../components/AppIcon.astro';
+import Icon from '../components/Icon.astro';
+import { t, path, locales, localeNames, type Locale } from '../i18n';
+import {
+  APP_STORE_URL, CONTACT_EMAIL, DOCS_URL, GITHUB_ISSUES_URL, GITHUB_RELEASES_URL, GITHUB_URL,
+} from '../config';
+
+interface Props {
+  locale: Locale;
+  /** Page slug without locale, e.g. '' or 'donate'. Used for the language switcher. */
+  page?: string;
+  title?: string;
+  description?: string;
+  /** Detect the browser language and redirect (only on the English home page). */
+  detectLanguage?: boolean;
+}
+
+const { locale, page = '', title, description } = Astro.props;
+// English pages send first-time visitors to their browser language (not the 404 page, which would loop).
+const detectLanguage = Astro.props.detectLanguage ?? (locale === 'en' && page !== '404');
+const d = t(locale);
+const pageTitle = title ?? d.meta.title;
+const pageDescription = description ?? d.meta.description;
+const canonical = new URL(path(locale, page), Astro.site);
+const home = path(locale);
+const year = new Date().getFullYear();
+---
+<!doctype html>
+<html lang={locale} class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <meta name="theme-color" content="#06070a" />
+    <link rel="canonical" href={canonical} />
+    {locales.map((l) => (
+      <link rel="alternate" hreflang={l} href={new URL(path(l, page), Astro.site)} />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={new URL(path('en', page), Astro.site)} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL('/og.png', Astro.site)} />
+    <meta property="og:locale" content={locale} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script is:inline>document.documentElement.classList.remove('no-js');</script>
+    {detectLanguage && (
+      <script is:inline>
+        (function () {
+          try {
+            if (localStorage.getItem('sp-lang')) return;
+            var langs = navigator.languages || [navigator.language];
+            for (var i = 0; i < langs.length; i++) {
+              var l = (langs[i] || '').slice(0, 2).toLowerCase();
+              if (l === 'en') return;
+              if (l === 'de' || l === 'fr') { location.replace('/' + l + location.pathname.replace(/\/?$/, '/') + location.hash); return; }
+            }
+          } catch (e) {}
+        })();
+      </script>
+    )}
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="site-header" data-header>
+      <div class="container header-inner">
+        <a class="brand" href={home} aria-label="SlidePilot">
+          <AppIcon size={28} />
+          <span>SlidePilot</span>
+        </a>
+
+        <nav class="nav" aria-label="Main">
+          <a href={`${home}#features`}>{d.nav.features}</a>
+          <a href={`${home}#remote`}>{d.nav.remote}</a>
+          <a href={`${home}#pricing`}>{d.nav.pricing}</a>
+          <a href={`${home}#faq`}>{d.nav.faq}</a>
+          <a href={DOCS_URL}>{d.nav.docs}</a>
+        </nav>
+
+        <div class="header-actions">
+          <details class="lang" data-menu>
+            <summary aria-label={d.nav.language}>
+              <Icon name="globe" size={17} />
+              <span class="lang-code">{locale.toUpperCase()}</span>
+            </summary>
+            <div class="menu-pop">
+              {locales.map((l) => (
+                <a href={path(l, page)} hreflang={l} lang={l} data-lang={l} aria-current={l === locale ? 'true' : undefined}>
+                  {localeNames[l]}
+                  {l === locale && <Icon name="check" size={15} />}
+                </a>
+              ))}
+            </div>
+          </details>
+          <a class="btn btn-secondary btn-sm hide-sm" href={path(locale, 'donate')}>
+            <Icon name="heart" size={15} class="heart" />{d.nav.donate}
+          </a>
+          <a class="btn btn-primary btn-sm" href={APP_STORE_URL}>{d.nav.download}</a>
+          <details class="mobile-nav" data-menu>
+            <summary aria-label={d.nav.menu}><Icon name="menu" size={20} /></summary>
+            <div class="menu-pop mobile-pop">
+              <a href={`${home}#features`}>{d.nav.features}</a>
+              <a href={`${home}#remote`}>{d.nav.remote}</a>
+              <a href={`${home}#pricing`}>{d.nav.pricing}</a>
+              <a href={`${home}#faq`}>{d.nav.faq}</a>
+              <a href={DOCS_URL}>{d.nav.docs}</a>
+              <a href={path(locale, 'donate')}>{d.nav.donate}</a>
+            </div>
+          </details>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <a class="brand" href={home}>
+              <AppIcon size={30} />
+              <span>SlidePilot</span>
+            </a>
+            <p>{d.footer.tagline}</p>
+          </div>
+          <div>
+            <h3>{d.footer.product}</h3>
+            <a href={`${home}#features`}>{d.nav.features}</a>
+            <a href={`${home}#remote`}>{d.nav.remote}</a>
+            <a href={`${home}#pricing`}>{d.nav.pricing}</a>
+            <a href={`${home}#faq`}>{d.nav.faq}</a>
+            <a href={path(locale, 'donate')}>{d.nav.donate}</a>
+          </div>
+          <div>
+            <h3>{d.footer.resources}</h3>
+            <a href={DOCS_URL}>{d.footer.docs}</a>
+            <a href={GITHUB_URL}>{d.footer.github}</a>
+            <a href={GITHUB_RELEASES_URL}>{d.footer.changelog}</a>
+            <a href={GITHUB_ISSUES_URL}>{d.footer.issues}</a>
+          </div>
+          <div>
+            <h3>{d.footer.legal}</h3>
+            <a href={path(locale, 'imprint')}>{d.footer.imprint}</a>
+            <a href={path(locale, 'privacy')}>{d.footer.privacy}</a>
+            <a href={path(locale, 'terms')}>{d.footer.terms}</a>
+            <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>© {year} SlidePilot. {d.footer.rights}</span>
+          <span class="footer-langs">
+            {locales.map((l) => (
+              <a href={path(l, page)} hreflang={l} data-lang={l} aria-current={l === locale ? 'true' : undefined}>{localeNames[l]}</a>
+            ))}
+          </span>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Header background after scrolling
+      const header = document.querySelector('[data-header]');
+      const onScroll = () => header?.classList.toggle('scrolled', window.scrollY > 8);
+      onScroll();
+      window.addEventListener('scroll', onScroll, { passive: true });
+
+      // Close <details> menus on outside click / Escape / link click
+      const menus = [...document.querySelectorAll<HTMLDetailsElement>('[data-menu]')];
+      document.addEventListener('click', (e) => {
+        menus.forEach((m) => { if (!m.contains(e.target as Node)) m.open = false; });
+      });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') menus.forEach((m) => (m.open = false)); });
+      menus.forEach((m) => m.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => (m.open = false))));
+
+      // Remember an explicit language choice
+      document.querySelectorAll<HTMLAnchorElement>('[data-lang]').forEach((a) =>
+        a.addEventListener('click', () => { try { localStorage.setItem('sp-lang', a.dataset.lang!); } catch {} }),
+      );
+
+      // Scroll reveal
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('is-visible'); io.unobserve(en.target); } });
+      }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+      document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+      // Touch screens: bring the calm illustration in the middle of the screen to life
+      if (matchMedia('(hover: none)').matches) {
+        const calm = new IntersectionObserver((entries) => {
+          entries.forEach((en) => en.target.classList.toggle('is-live', en.isIntersecting));
+        }, { rootMargin: '-35% 0px -35% 0px' });
+        document.querySelectorAll('.calm').forEach((el) => calm.observe(el));
+      }
+
+      // Share / copy link buttons
+      document.querySelectorAll<HTMLButtonElement>('[data-share]').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const url = 'https://slidepilotapp.com/';
+          const text = btn.dataset.shareText ?? '';
+          if (navigator.share && matchMedia('(pointer: coarse)').matches) {
+            try { await navigator.share({ title: 'SlidePilot', text, url }); return; } catch { return; }
+          }
+          try {
+            await navigator.clipboard.writeText(url);
+            const label = btn.querySelector('[data-label]');
+            if (label) {
+              const old = label.textContent;
+              label.textContent = btn.dataset.copied ?? 'Copied';
+              setTimeout(() => (label.textContent = old), 1800);
+            }
+          } catch {}
+        });
+      });
+    </script>
+  </body>
+</html>
+
+<style>
+  .skip {
+    position: absolute; left: 12px; top: -48px; z-index: 100;
+    background: #fff; color: #000; padding: 8px 14px; border-radius: 8px; font-weight: 600;
+  }
+  .skip:focus { top: 12px; }
+
+  .site-header {
+    position: fixed; inset: 0 0 auto 0; z-index: 50;
+    transition: background .3s, border-color .3s, backdrop-filter .3s;
+    border-bottom: 1px solid transparent;
+  }
+  .site-header.scrolled {
+    background: rgba(6, 7, 10, .72);
+    backdrop-filter: saturate(160%) blur(18px);
+    -webkit-backdrop-filter: saturate(160%) blur(18px);
+    border-bottom-color: var(--border);
+  }
+  .header-inner { display: flex; align-items: center; height: 64px; gap: 24px; }
+  .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 650; font-size: 16px; letter-spacing: -.02em; }
+  .nav { display: flex; gap: 4px; margin: 0 auto; }
+  .nav a {
+    padding: 8px 12px; border-radius: 999px; font-size: 14px; color: var(--text-2);
+    transition: color .2s, background .2s;
+  }
+  .nav a:hover { color: var(--text); background: rgba(255,255,255,.05); }
+  .header-actions { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+  .nav + .header-actions { margin-left: 0; }
+  .btn-sm { --h: 36px; padding: 0 14px; font-size: 13.5px; gap: 7px; }
+  .btn-sm :global(svg) { width: 15px; height: 15px; }
+  :global(.heart) { color: var(--pink); }
+
+  details { position: relative; }
+  summary {
+    list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+    height: 36px; padding: 0 10px; border-radius: 999px; color: var(--text-2); font-size: 13px; font-weight: 550;
+    transition: color .2s, background .2s;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary:hover, details[open] summary { color: var(--text); background: rgba(255,255,255,.06); }
+  .menu-pop {
+    position: absolute; right: 0; top: calc(100% + 8px); min-width: 170px;
+    padding: 6px; border-radius: 14px;
+    background: rgba(20, 22, 28, .92);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border-strong);
+    box-shadow: 0 20px 50px -10px rgba(0,0,0,.6);
+    display: flex; flex-direction: column;
+    animation: pop .18s var(--ease);
+  }
+  .menu-pop a {
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    padding: 9px 12px; border-radius: 9px; font-size: 14px; color: var(--text-2);
+  }
+  .menu-pop a:hover { background: rgba(255,255,255,.07); color: var(--text); }
+  .menu-pop a[aria-current] { color: var(--text); }
+  @keyframes pop { from { opacity: 0; transform: translateY(-4px) scale(.98); } }
+
+  .mobile-nav { display: none; }
+  @media (max-width: 900px) {
+    .nav { display: none; }
+    .header-actions { margin-left: auto !important; }
+    .mobile-nav { display: block; }
+  }
+  @media (max-width: 520px) {
+    .hide-sm { display: none; }
+    .lang-code { display: none; }
+    .header-actions { gap: 4px; }
+  }
+
+  .site-footer { border-top: 1px solid var(--border); padding: 64px 0 32px; margin-top: 40px; font-size: 14px; }
+  .footer-grid { display: grid; grid-template-columns: 1.6fr repeat(3, 1fr); gap: 40px; }
+  .footer-grid h3 { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 14px; letter-spacing: 0; }
+  .footer-grid > div:not(.footer-brand) { display: flex; flex-direction: column; gap: 10px; }
+  .footer-grid a { color: var(--text-2); transition: color .2s; width: fit-content; }
+  .footer-grid a:hover { color: var(--text); }
+  .footer-brand p { color: var(--text-3); margin-top: 14px; max-width: 260px; }
+  .footer-bottom {
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-3); font-size: 13px;
+  }
+  .footer-langs { display: flex; gap: 16px; }
+  .footer-langs a:hover, .footer-langs a[aria-current] { color: var(--text); }
+  @media (max-width: 760px) {
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .footer-brand { grid-column: 1 / -1; }
+  }
+</style>

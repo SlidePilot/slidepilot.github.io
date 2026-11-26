@@ -1,0 +1,110 @@
+---
+import Base from '../../layouts/Base.astro';
+import Glyph from '../../components/Glyph.astro';
+import Icon from '../../components/Icon.astro';
+import { t, localePaths, type Locale } from '../../i18n';
+import { APP_STORE_URL, GITHUB_URL, PAYPAL_BUTTON_ID } from '../../config';
+
+export const getStaticPaths = localePaths;
+const { locale } = Astro.props as { locale: Locale };
+const d = t(locale);
+const p = d.donate;
+const whereIcons = ['wrench', 'server', 'sparkle'] as const;
+const paypalLocale = { en: 'en_US', de: 'de_DE', fr: 'fr_FR' }[locale];
+---
+<Base locale={locale} page="donate" title={p.metaTitle} description={p.metaDescription}>
+  <section class="donate-hero">
+    <div class="bg" aria-hidden="true"></div>
+    <div class="container inner">
+      <div class="emblem reveal" aria-hidden="true">
+        <div class="tile"><Glyph id="donate" /></div>
+        <span class="heart-badge"><Icon name="heart" size={22} /></span>
+        <span class="orbit o1"></span><span class="orbit o2"></span>
+      </div>
+      <span class="eyebrow reveal">{p.eyebrow}</span>
+      <h1 class="section-title reveal" style="--delay:.05s">{p.title}</h1>
+      <p class="section-lead reveal" style="--delay:.1s">{p.lead}</p>
+
+      <form class="reveal" style="--delay:.15s" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+        <input type="hidden" name="cmd" value="_s-xclick" />
+        <input type="hidden" name="hosted_button_id" value={PAYPAL_BUTTON_ID} />
+        <input type="hidden" name="lc" value={paypalLocale} />
+        <button type="submit" class="btn btn-primary btn-lg paypal">
+          <Icon name="heart" size={18} class="heart" />{p.button}
+        </button>
+      </form>
+      <p class="secure reveal" style="--delay:.2s"><Icon name="lock" size={14} />{p.secure}</p>
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="container">
+      <h2 class="sub reveal">{p.whereTitle}</h2>
+      <div class="cards">
+        {p.where.map((w, i) => (
+          <article class="card item reveal" style={`--delay:${i * 0.06}s`}>
+            <span class="ic"><Icon name={whereIcons[i]} size={18} /></span>
+            <h3>{w.title}</h3>
+            <p>{w.text}</p>
+          </article>
+        ))}
+      </div>
+
+      <h2 class="sub reveal">{p.otherTitle}</h2>
+      <div class="cards">
+        <article class="card item reveal">
+          <span class="ic"><Icon name="bag" size={18} /></span>
+          <h3>{p.other[0].title}</h3>
+          <p>{p.other[0].text}</p>
+          <a class="btn btn-secondary btn-sm2" href={APP_STORE_URL}><Icon name="apple" />{p.other[0].cta}</a>
+        </article>
+        <article class="card item reveal" style="--delay:.06s">
+          <span class="ic"><Icon name="share" size={18} /></span>
+          <h3>{p.other[1].title}</h3>
+          <p>{p.other[1].text}</p>
+          <button class="btn btn-secondary btn-sm2" type="button" data-share data-share-text={d.pricing.support.shareText} data-copied={d.pricing.support.copied}>
+            <Icon name="share" /><span data-label>{p.other[1].cta}</span>
+          </button>
+        </article>
+        <article class="card item reveal" style="--delay:.12s">
+          <span class="ic"><Icon name="github" size={18} /></span>
+          <h3>{p.other[2].title}</h3>
+          <p>{p.other[2].text}</p>
+          <a class="btn btn-secondary btn-sm2" href={GITHUB_URL}><Icon name="github" />{p.other[2].cta}</a>
+        </article>
+      </div>
+      <p class="thanks reveal">{p.thanks} <Icon name="heart" size={16} class="heart" /></p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .donate-hero { position: relative; padding: 150px 0 40px; overflow: hidden; text-align: center; }
+  .bg { position: absolute; inset: 0; z-index: -1;
+    background:
+      radial-gradient(ellipse 40% 50% at 50% 22%, rgba(255, 79, 154, .18), transparent 70%),
+      radial-gradient(ellipse 60% 60% at 50% 30%, rgba(30, 107, 245, .25), transparent 70%); }
+  .inner { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .emblem { position: relative; width: 120px; height: 120px; margin-bottom: 18px; display: grid; place-items: center; }
+  .tile { width: 108px; height: 108px; border-radius: 28px; display: grid; place-items: center; background: linear-gradient(#3da8ff, #0057f0 70%); box-shadow: inset 0 0 0 1px rgba(255,255,255,.25), 0 24px 60px -10px rgba(30,107,245,.9); }
+  .tile :global(svg) { width: 74%; }
+  .heart-badge { position: absolute; right: -10px; bottom: -6px; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; color: #fff; background: linear-gradient(#ff6fae, #ff2d7a); box-shadow: 0 0 0 4px var(--bg), 0 10px 30px -4px rgba(255,45,122,.8); animation: beat 2.4s ease-in-out infinite; }
+  @keyframes beat { 0%, 100% { transform: scale(1); } 12% { transform: scale(1.14); } 24% { transform: scale(1); } 36% { transform: scale(1.08); } 48% { transform: scale(1); } }
+  .orbit { position: absolute; inset: -22px; border-radius: 40px; border: 1px solid rgba(140,190,255,.18); animation: grow 4s ease-out infinite; }
+  .o2 { animation-delay: 2s; }
+  @keyframes grow { from { transform: scale(.9); opacity: 1; } to { transform: scale(1.5); opacity: 0; } }
+  form { margin-top: 18px; }
+  .paypal { height: 56px; padding: 0 30px; }
+  .secure { display: inline-flex; align-items: center; gap: 7px; color: var(--text-3); font-size: 13.5px; }
+
+  .tight { padding-top: 40px; }
+  .sub { font-size: 22px; font-weight: 640; margin: 40px 0 18px; }
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .item { padding: 24px; display: flex; flex-direction: column; gap: 6px; }
+  .ic { width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center; background: rgba(61,168,255,.1); border: 1px solid rgba(61,168,255,.25); color: var(--blue); margin-bottom: 8px; }
+  .item h3 { font-size: 17px; font-weight: 620; }
+  .item p { color: var(--text-2); font-size: 15px; }
+  .btn-sm2 { --h: 40px; margin-top: 14px; align-self: flex-start; font-size: 14px; }
+  .thanks { margin-top: 48px; text-align: center; color: var(--text-2); display: flex; justify-content: center; align-items: center; gap: 8px; }
+  @media (max-width: 860px) { .cards { grid-template-columns: 1fr; } }
+</style>

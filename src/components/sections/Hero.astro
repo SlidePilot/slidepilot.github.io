@@ -1,0 +1,69 @@
+---
+import { Image } from 'astro:assets';
+import HeroGraphic from '../HeroGraphic.astro';
+import AppStoreButton from '../AppStoreButton.astro';
+import Icon from '../Icon.astro';
+import { screen } from '../screens';
+import { path, type Locale } from '../../i18n';
+import { GITHUB_DOWNLOAD_URL } from '../../config';
+import type { Dict } from '../../i18n/en';
+interface Props { d: Dict; locale: Locale }
+const { d, locale } = Astro.props;
+---
+<section class="hero" id="download">
+  <HeroGraphic />
+  <div class="container hero-copy">
+    <h1 class="reveal" style="--delay:.05s" set:html={d.hero.title} />
+    <div class="actions reveal" style="--delay:.15s">
+      <AppStoreButton d={d} />
+      <a class="btn btn-secondary btn-lg donate" href={path(locale, 'donate')}>
+        <Icon name="heart" size={18} class="heart" />{d.hero.donate}
+      </a>
+    </div>
+    <a class="gh-link link reveal" style="--delay:.2s" href={GITHUB_DOWNLOAD_URL}>
+      <Icon name="github" size={15} />{d.hero.github}
+    </a>
+  </div>
+
+  <div class="container showcase reveal" style="--delay:.1s">
+    <div class="frame">
+      <div class="frame-glow"></div>
+      <Image src={screen('presenter', locale)} alt={d.showcase.alt} widths={[800, 1400, 2200]} sizes="(max-width: 1200px) 94vw, 1100px" loading="eager" />
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero { position: relative; padding-top: 72px; overflow: hidden; }
+  .hero-copy { display: flex; flex-direction: column; align-items: center; text-align: center; margin-top: -18px; position: relative; z-index: 2; }
+  h1 {
+    font-size: clamp(38px, 6vw, 68px);
+    font-weight: 680; letter-spacing: -.045em; line-height: 1.02;
+    background: linear-gradient(180deg, #fff 35%, rgba(255,255,255,.55));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    text-wrap: balance;
+    padding-bottom: .06em;
+  }
+  .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 36px; }
+  .donate { height: 54px; border-radius: 14px; }
+  .gh-link { display: inline-flex; align-items: center; gap: 7px; margin-top: 20px; font-size: 14px; color: var(--text-3); }
+
+  .showcase { margin-top: clamp(56px, 8vw, 96px); max-width: 1180px; }
+  .frame {
+    position: relative; border-radius: clamp(14px, 2.4vw, 28px); padding: clamp(5px, .7vw, 9px);
+    background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.03));
+    box-shadow: 0 40px 120px -30px rgba(20, 90, 255, .45), 0 0 0 1px rgba(255,255,255,.06);
+  }
+  .frame :global(img) { width: 100%; border-radius: clamp(10px, 1.9vw, 21px); }
+  .frame-glow {
+    position: absolute; inset: -12% 8% auto; height: 40%;
+    background: radial-gradient(closest-side, rgba(61,140,255,.35), transparent);
+    filter: blur(30px); z-index: -1;
+  }
+  .showcase::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: -2px; height: 30%;
+    background: linear-gradient(transparent, var(--bg));
+    pointer-events: none;
+  }
+  .showcase { position: relative; }
+</style>
