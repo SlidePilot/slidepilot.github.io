@@ -10,7 +10,7 @@ const en = {
   nav: {
     features: 'Features',
     remote: 'Remote',
-    pricing: 'Open Source',
+    pricing: 'Pricing',
     faq: 'FAQ',
     docs: 'Docs',
     donate: 'Donate',
@@ -96,18 +96,17 @@ const en = {
     text: 'No account, no tracking, no server. Everything stays on your devices.',
   },
   pricing: {
-    eyebrow: 'Download',
+    eyebrow: 'Pricing',
     title: 'Open to everyone. Fairly funded.',
-    lead: 'Get SlidePilot from the App Store or download the Mac app straight from GitHub. The source code is open.',
-    source: 'View on GitHub',
+    lead: 'SlidePilot is open source, so the Mac app is free on GitHub. The App Store is more convenient and also covers iPad and iPhone. Pro funds further development.',
+    source: 'View source code',
     appStore: {
       label: 'App Store',
       price: 'Try it free',
-      priceNote: 'Pro as a one-time purchase',
-      text: 'Everything on your own screen is unlimited. Try the audience output and remote control for 3 minutes each, Pro unlocks them for good.',
+      priceNote: 'Pro: one-time, no subscription',
+      text: 'Everything on your own screen is unlimited. Presenting on a projector or external display and remote control can be tried for 3 minutes each, Pro unlocks them for good.',
       items: ['Mac, iPad and iPhone', 'Automatic updates', 'Family Sharing'],
       cta: 'Get it on the App Store',
-      recommended: 'Recommended',
     },
     github: {
       label: 'GitHub',

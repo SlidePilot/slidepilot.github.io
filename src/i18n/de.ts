@@ -11,7 +11,7 @@ const de: Dict = {
   nav: {
     features: 'Funktionen',
     remote: 'Fernsteuerung',
-    pricing: 'Open Source',
+    pricing: 'Preise',
     faq: 'FAQ',
     docs: 'Doku',
     donate: 'Spenden',
@@ -97,18 +97,17 @@ const de: Dict = {
     text: 'Kein Konto, kein Tracking, kein Server. Alles bleibt auf deinen Geräten.',
   },
   pricing: {
-    eyebrow: 'Download',
+    eyebrow: 'Preise',
     title: 'Offen für alle. Fair finanziert.',
-    lead: 'Hol dir SlidePilot aus dem App Store oder lade die Mac-App direkt von GitHub. Der Quellcode ist offen.',
-    source: 'Auf GitHub ansehen',
+    lead: 'SlidePilot ist Open Source: Die Mac-App gibt es gratis auf GitHub. Bequemer geht’s im App Store, auch für iPad und iPhone. Mit Pro finanzierst du die Weiterentwicklung.',
+    source: 'Quellcode ansehen',
     appStore: {
       label: 'App Store',
       price: 'Kostenlos testen',
-      priceNote: 'Pro als einmaliger Kauf',
-      text: 'Alles auf deinem Bildschirm ohne Limit. Publikum und Fernsteuerung kannst du je 3 Minuten testen, Pro schaltet sie dauerhaft frei.',
+      priceNote: 'Pro einmalig, kein Abo',
+      text: 'Alles auf deinem Bildschirm ohne Limit. Präsentieren auf Beamer oder externem Bildschirm und die Fernsteuerung kannst du je 3 Minuten testen, Pro schaltet sie dauerhaft frei.',
       items: ['Mac, iPad und iPhone', 'Automatische Updates', 'Familienfreigabe'],
       cta: 'Im App Store laden',
-      recommended: 'Empfohlen',
     },
     github: {
       label: 'GitHub',
