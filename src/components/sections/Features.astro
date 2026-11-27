@@ -54,7 +54,7 @@ const thumbs = Array.from({ length: 8 }, (_, i) => i);
       </article>
 
       <!-- Drawing -->
-      <article class="card tile primary span-2 tile-shot reveal" style="--delay:.08s">
+      <article class="card tile primary span-2 tile-shot calm reveal" style="--delay:.08s">
         <div class="shot">
           <Image src={screen('drawing', locale)} alt={f.drawing.alt} widths={[600, 1000, 1400]} sizes="(max-width: 900px) 92vw, 720px" />
           <svg class="scribble" viewBox="0 0 400 200" aria-hidden="true"><path d="M40 150 C 90 60, 160 40, 220 90 S 330 170, 370 60" /></svg>
@@ -134,7 +134,6 @@ const thumbs = Array.from({ length: 8 }, (_, i) => i);
   .illo { flex: 1; display: grid; place-items: center; padding: 24px; min-height: 200px; position: relative; }
   .calm .illo { opacity: .82; transition: opacity .4s var(--ease); }
   .calm:hover .illo, .calm.is-live .illo { opacity: 1; }
-  .primary { background: linear-gradient(180deg, rgba(61,140,255,.07), rgba(255,255,255,.015) 60%); }
 
   @media (max-width: 900px) {
     .bento { grid-template-columns: 1fr 1fr; }
