@@ -40,7 +40,6 @@ const p = d.pricing;
     </div>
 
     <p class="support reveal">
-      <Icon name="heart" size={16} class="heart" />
       <span>{p.support.title}</span>
       <a class="link" href={APP_STORE_URL}>{p.support.buy}</a>
       <span class="sep" aria-hidden="true">·</span>
@@ -59,9 +58,8 @@ const p = d.pricing;
   .plans { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; max-width: 900px; margin: 0 auto; align-items: center; }
   .plan { padding: 32px; display: flex; flex-direction: column; }
   .main {
-    background: linear-gradient(180deg, rgba(30,107,245,.2), rgba(255,255,255,.02) 60%);
-    border-color: rgba(61,168,255,.35);
-    box-shadow: 0 30px 90px -30px rgba(30,107,245,.6);
+    background: var(--surface-strong);
+    border-color: rgba(61,168,255,.4);
     padding: 40px 36px;
   }
   .alt { background: transparent; }
@@ -82,7 +80,7 @@ const p = d.pricing;
   .alt li :global(svg) { color: var(--text-3); }
   .plan .btn { width: 100%; }
 
-  .support { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 10px; margin-top: 40px; font-size: 15px; color: var(--text-2); }
+  .support { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 10px; margin-top: 40px; font-size: 14px; color: var(--text-3); }
   .support .sep { color: var(--text-3); }
   .share { background: none; border: 0; padding: 0; font: inherit; cursor: pointer; }
 

@@ -90,6 +90,7 @@ const year = new Date().getFullYear();
           <a href={`${home}#pricing`}>{d.nav.pricing}</a>
           <a href={`${home}#faq`}>{d.nav.faq}</a>
           <a href={DOCS_URL}>{d.nav.docs}</a>
+          <a href={path(locale, 'donate')}>{d.nav.donate}</a>
         </nav>
 
         <div class="header-actions">
@@ -107,9 +108,6 @@ const year = new Date().getFullYear();
               ))}
             </div>
           </details>
-          <a class="btn btn-secondary btn-sm hide-sm" href={path(locale, 'donate')}>
-            <Icon name="heart" size={15} class="heart" />{d.nav.donate}
-          </a>
           <a class="btn btn-primary btn-sm" href={APP_STORE_URL}>{d.nav.download}</a>
           <details class="mobile-nav" data-menu>
             <summary aria-label={d.nav.menu}><Icon name="menu" size={20} /></summary>

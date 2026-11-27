@@ -20,14 +20,13 @@ const { d, locale } = Astro.props;
         <Icon name="heart" size={18} class="heart" />{d.hero.donate}
       </a>
     </div>
-    <a class="gh-link link reveal" style="--delay:.2s" href={GITHUB_DOWNLOAD_URL}>
-      <Icon name="github" size={15} />{d.hero.github}
-    </a>
+    <p class="alt-links reveal" style="--delay:.2s">
+      <a class="link" href={GITHUB_DOWNLOAD_URL}><Icon name="github" size={15} />{d.hero.github}</a>
+    </p>
   </div>
 
   <div class="container showcase reveal" style="--delay:.1s">
     <div class="frame">
-      <div class="frame-glow"></div>
       <Image src={screen('presenter', locale)} alt={d.showcase.alt} widths={[800, 1400, 2200]} sizes="(max-width: 1200px) 94vw, 1100px" loading="eager" />
     </div>
   </div>
@@ -46,20 +45,17 @@ const { d, locale } = Astro.props;
   }
   .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 36px; }
   .donate { height: 54px; border-radius: 14px; }
-  .gh-link { display: inline-flex; align-items: center; gap: 7px; margin-top: 20px; font-size: 14px; color: var(--text-3); }
+  .alt-links { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px 10px; margin-top: 20px; font-size: 14px; color: var(--text-3); }
+  .alt-links .link { display: inline-flex; align-items: center; gap: 7px; color: var(--text-3); }
+  .alt-links .link:hover { color: var(--text); }
 
   .showcase { margin-top: clamp(56px, 8vw, 96px); max-width: 1180px; }
   .frame {
     position: relative; border-radius: clamp(14px, 2.4vw, 28px); padding: clamp(5px, .7vw, 9px);
     background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.03));
-    box-shadow: 0 40px 120px -30px rgba(20, 90, 255, .45), 0 0 0 1px rgba(255,255,255,.06);
+    box-shadow: 0 40px 100px -40px rgba(0, 0, 0, .9), 0 0 0 1px rgba(255,255,255,.06);
   }
   .frame :global(img) { width: 100%; border-radius: clamp(10px, 1.9vw, 21px); }
-  .frame-glow {
-    position: absolute; inset: -12% 8% auto; height: 40%;
-    background: radial-gradient(closest-side, rgba(61,140,255,.35), transparent);
-    filter: blur(30px); z-index: -1;
-  }
   .showcase::after {
     content: ''; position: absolute; left: 0; right: 0; bottom: -2px; height: 30%;
     background: linear-gradient(transparent, var(--bg));
