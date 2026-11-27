@@ -19,10 +19,10 @@ const { d, size = 'lg' } = Astro.props;
     border-radius: 14px;
     background: linear-gradient(180deg, #ffffff, #e3e9f3);
     color: #05070b;
-    box-shadow: 0 0 0 1px rgba(255,255,255,.25), 0 10px 36px -10px rgba(110,170,255,.7), inset 0 -1px 0 rgba(0,0,0,.08);
+    box-shadow: inset 0 -1px 0 rgba(0,0,0,.08);
     transition: transform .25s var(--ease), box-shadow .25s;
   }
-  .store-btn:hover { transform: translateY(-1px); box-shadow: 0 0 0 1px rgba(255,255,255,.35), 0 16px 44px -10px rgba(110,170,255,.9); }
+  .store-btn:hover { transform: translateY(-1px); background: #fff; }
   .store-btn:active { transform: scale(.98); }
   .store-btn :global(svg) { margin-top: -3px; }
   .label { display: flex; flex-direction: column; line-height: 1.05; text-align: left; }
